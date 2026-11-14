@@ -101,10 +101,11 @@ h2 { font-size: 84px; font-weight: 800; margin-top: 20px; }
 .s4 h2 { font-size: 72px; }
 .s4 .lead { font-size: 28px; max-width: 1600px; margin-top: 18px; }
 .s4 .ph { display: flex; flex-direction: column; align-items: center; }
-.s4 .phone { width: 340px; }
-.s4 .phone .frame { width: 314px; height: 500px; }
-.s4 .phone iframe { width: 390px; height: 621px; transform: scale(.8051); }
-.s4 .cap { margin-top: 26px; text-align: center; }
+.s4 .phone { width: 299px; border-radius: 46px; padding: 12px; }
+.s4 .phone::after { top: 20px; width: 90px; height: 24px; }
+.s4 .phone .frame { width: 275px; height: 595px; border-radius: 35px; }
+.s4 .phone iframe { width: 390px; height: 844px; transform: scale(.7051); }
+.s4 .cap { margin-top: 22px; text-align: center; }
 .s4 .cap b { display: block; font-size: 28px; }
 .s4 .cap span { font-size: 21px; color: var(--ink2); }
 .s4 .step { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 800; font-size: 20px; margin-bottom: 10px; }
@@ -185,8 +186,8 @@ body.idle .controls { opacity: 0; }
         <dl class="meta">
           <dt>Challenge</dt><dd>Create Health Monitoring Software for Astronauts on Space Missions</dd>
           <dt>Team</dt><dd>ICBS – International Center for Biomedical &amp; Space Sciences, LIASTRA Institute</dd>
-          <!-- TEAM_MEMBERS: replace the text inside the span below with the member names -->
-          <dt>Members</dt><dd><span class="edit-me" id="members">[Add team member names]</span></dd>
+          <!-- TEAM_MEMBERS -->
+          <dt>Member</dt><dd id="members">Marina Corrêa Freitas</dd>
           <dt>Local event</dt><dd>São Gonçalo, Brazil · NASA Space Apps Challenge 2026</dd>
         </dl>
       </div>
@@ -248,10 +249,10 @@ body.idle .controls { opacity: 0; }
       <p class="lead">It works offline on any phone or laptop. Every measurement explains itself, so no medical training is needed.</p>
     </div>
     <div class="phones">
-      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#log" title="Log health" tabindex="-1"></iframe></div></div><div class="cap"><span class="step">1</span><b>Guided logging</b><span>Fields turn green, amber or red as you type</span></div></div>
-      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#pulse" title="Camera pulse" tabindex="-1"></iframe></div></div><div class="cap"><span class="step">2</span><b>Camera pulse</b><span>Heart rate from a fingertip, on-device</span></div></div>
-      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#reaction" title="Reaction test" tabindex="-1"></iframe></div></div><div class="cap"><span class="step">3</span><b>Reaction test</b><span>3-min PVT-B fatigue screening (used on the ISS)</span></div></div>
-      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#achievements" title="Achievements" tabindex="-1"></iframe></div></div><div class="cap"><span class="step">4</span><b>Gamified routine</b><span>Timed prompts, XP, streaks and badges</span></div></div>
+      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#log" title="Log health" tabindex="-1"></iframe></div></div><div class="cap"><b>Guided logging</b><span>Fields turn green, amber or red as you type</span></div></div>
+      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#pulse" title="Camera pulse" tabindex="-1"></iframe></div></div><div class="cap"><b>Camera pulse</b><span>Heart rate from a fingertip, on-device</span></div></div>
+      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#reaction" title="Reaction test" tabindex="-1"></iframe></div></div><div class="cap"><b>Reaction test</b><span>3-min PVT-B fatigue screening (used on the ISS)</span></div></div>
+      <div class="ph"><div class="phone"><div class="frame"><iframe src="../app.html?embed=1#achievements" title="Achievements" tabindex="-1"></iframe></div></div><div class="cap"><b>Gamified routine</b><span>Timed prompts, XP, streaks and badges</span></div></div>
     </div>
     <div class="num">4 / 7</div>
   </section>

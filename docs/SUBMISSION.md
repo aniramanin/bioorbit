@@ -95,7 +95,7 @@ Yes. The concept, the scientific direction and the features were defined by our 
 | 0:22–0:30 | "It works offline, from the Space Station to Mars, and for remote communities here on Earth." | Troca de ambiente: ISS → Marte → Terra |
 
 ## Roteiro dos 7 slides (alternativa ao vídeo)
-1. **Title:** BioOrbit — Astronaut Health OS · Team ICBS – LIASTRA · Challenge: Create Health Monitoring Software for Astronauts on Space Missions · `[member names]`
+1. **Title:** BioOrbit — Astronaut Health OS · Team ICBS – LIASTRA · Challenge: Create Health Monitoring Software for Astronauts on Space Missions · Marina Corrêa Freitas
 2. **Problem:** the 5 NASA HRP hazards, a 20-minute delay and no evacuation on Mars.
 3. **Solution:** screenshot of the Bridge (readiness score + body map).
 4. **User experience:** log, camera pulse, reaction test, guidance (4 screenshots).
