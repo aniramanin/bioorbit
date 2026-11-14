@@ -1,0 +1,124 @@
+<!doctype html>
+<!--
+  BioOrbit — Astronaut Health Monitoring
+  Team: ICBS – International Center for Biomedical & Space Sciences, LIASTRA Institute
+  NASA Space Apps Challenge 2026 — "Create Health Monitoring Software for Astronauts on Space Missions"
+
+  SI disclosure: the source code of this application was written with the
+  assistance of an AI coding assistant (Claude, Anthropic). The concept and
+  scientific direction come from the ICBS / LIASTRA team. See README.md.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BioOrbit — Astronaut Health Monitoring</title>
+  <meta name="description" content="Offline-first health monitoring and decision support for astronauts on long-duration missions — and for remote care on Earth.">
+  <meta name="generator" content="Hand-written HTML/CSS/JS; code written with AI assistance (Claude, Anthropic)">
+  <meta name="theme-color" content="#0b6bed">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M68 20.8A36 36 0 1 0 24.5 77.5' fill='none' stroke='%230b1f3a' stroke-width='11' stroke-linecap='round'/%3E%3Cpath d='M17 76h12l7-14 8 27 6-10c14-1 26-8 32-20 3-6 4-11 4-17' fill='none' stroke='%230b6bed' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='80' cy='21' r='8' fill='%230b6bed'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <canvas id="stars" aria-hidden="true"></canvas>
+
+  <div class="app">
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="assets/img/bioorbit-logo.webp" alt="BioOrbit" class="brand-logo" width="2000" height="667">
+        <div class="brand-sub">Astronaut Health OS</div>
+      </div>
+      <div class="nav-label">Menu</div>
+      <nav class="nav" id="nav">
+        <a href="#bridge" data-view="bridge"><svg class="i" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/></svg><span>Bridge</span></a>
+        <a href="#log" data-view="log"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Log health</span></a>
+        <a href="#trends" data-view="trends"><svg class="i" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg><span>Trends</span></a>
+        <a href="#pulse" data-view="pulse"><svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.2-9.4A4.9 4.9 0 0 1 12 6.6a4.9 4.9 0 0 1 9.2 4C19.5 15.4 12 20 12 20z"/></svg><span>Camera pulse</span></a>
+        <a href="#reaction" data-view="reaction"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 10v3.5l2.5 2M9.5 2.5h5"/></svg><span>Reaction test</span></a>
+        <a href="#crew" data-view="crew"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.4-3.7 3-5.7 6.5-5.7s6.1 2 6.5 5.7"/><path d="M15.5 4.6a3.5 3.5 0 0 1 0 6.8M18 14.6c2 .7 3.2 2.5 3.5 5.4"/></svg><span>Crew</span></a>
+        <a href="#downlink" data-view="downlink"><svg class="i" viewBox="0 0 24 24"><path d="M21 3 10.5 13.5"/><path d="M21 3l-6.5 18-4-7.5L3 9.5z"/></svg><span>Downlink</span></a>
+        <a href="#library" data-view="library"><svg class="i" viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h14v15H6a2 2 0 0 0-2 2 2 2 0 0 0 2 2h14"/></svg><span>Library</span></a>
+        <a href="index.html" class="nav-site" target="_top"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span>Project website</span></a>
+        <a href="#achievements" data-view="achievements"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 13.8-1.5 7.7 5-2.8 5 2.8-1.5-7.7"/></svg><span>Achievements</span></a>
+      </nav>
+      <button class="env-card" id="envCard" type="button" aria-label="Change mission environment">
+        <span class="env-label">Environment</span>
+        <span class="env-name" id="envName">—</span>
+        <span class="env-sub" id="envSub">—</span>
+        <span class="env-change">Change environment →</span>
+      </button>
+      <div class="side-foot">
+        <button class="ghost-btn" id="settingsBtn" type="button"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg> Settings</button>
+        <div class="partners" id="partners">
+          <div class="pt-label">A project by</div>
+          <div class="pt-row">
+            <img src="assets/img/liastra-logo.png" alt="LIASTRA Institute" class="pt-liastra">
+            <img src="assets/img/icbs-logo.webp" alt="ICBS – International Center for Biomedical &amp; Space Sciences" class="pt-icbs">
+          </div>
+          <div class="pt-label">Competing in</div>
+          <img src="assets/img/space-apps-logo.png" alt="NASA Space Apps Challenge" class="pt-nasa">
+        </div>
+        <div class="disclaimer">Decision support only — not a medical device.</div>
+      </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="main">
+      <header class="topbar">
+        <div class="top-brand"><img src="assets/img/bioorbit-logo.webp" alt="BioOrbit" class="top-logo" width="2000" height="667"></div>
+        <div class="mission">
+          <div class="mi"><span class="mi-ico"><svg class="i" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><span class="mi-txt"><span class="k">Mission day</span><span class="v" id="mDay">—</span></span></div>
+          <div class="mi"><span class="mi-ico"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><span class="mi-txt"><span class="k">Elapsed time</span><span class="v" id="met">—</span></span></div>
+          <div class="mi"><span class="mi-ico"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(-25 12 12)"/></svg></span><span class="mi-txt"><span class="k">Gravity</span><span class="v" id="mGrav">—</span></span></div>
+          <div class="mi"><span class="mi-ico"><svg class="i" viewBox="0 0 24 24"><path d="M5 12a7 7 0 0 1 14 0M8.5 12a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="12" r="1"/><path d="M12 13v8"/></svg></span><span class="mi-txt"><span class="k">Signal to Earth</span><span class="v" id="mDelay"><i class="sig"></i>—</span></span></div>
+        </div>
+        <button class="who" id="whoBtn" type="button" aria-haspopup="listbox">
+          <span class="avatar" id="whoAvatar">—</span>
+          <span class="who-txt"><b id="whoName">—</b><small id="whoRole">—</small></span>
+          <span class="caret">▾</span>
+        </button>
+        <div class="who-menu" id="whoMenu" role="listbox" hidden></div>
+      </header>
+
+      <div class="prompt-bar" id="promptBar" hidden></div>
+
+      <section class="view" id="view-bridge"></section>
+      <section class="view" id="view-log"></section>
+      <section class="view" id="view-trends"></section>
+      <section class="view" id="view-pulse"></section>
+      <section class="view" id="view-reaction"></section>
+      <section class="view" id="view-crew"></section>
+      <section class="view" id="view-downlink"></section>
+      <section class="view" id="view-library"></section>
+      <section class="view" id="view-achievements"></section>
+    </main>
+  </div>
+
+
+  <nav class="tabbar" id="tabbar" aria-label="Main">
+    <a href="#bridge" data-view="bridge"><svg class="i" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/></svg><span>Home</span></a>
+    <a href="#trends" data-view="trends"><svg class="i" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg><span>Trends</span></a>
+    <a href="#log" data-view="log" class="fab" aria-label="Log health"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Log</span></a>
+    <a href="#crew" data-view="crew"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.4-3.7 3-5.7 6.5-5.7s6.1 2 6.5 5.7"/><path d="M15.5 4.6a3.5 3.5 0 0 1 0 6.8M18 14.6c2 .7 3.2 2.5 3.5 5.4"/></svg><span>Crew</span></a>
+    <button type="button" id="moreBtn"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span>More</span></button>
+  </nav>
+
+  <!-- modal host -->
+  <div class="modal-back" id="modalBack" hidden>
+    <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+  </div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script src="assets/js/knowledge.js"></script>
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/engine.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/ppg.js"></script>
+  <script src="assets/js/pvt.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

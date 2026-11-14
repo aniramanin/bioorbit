@@ -1,0 +1,328 @@
+<!doctype html>
+<!--
+  BioOrbit — project website
+  LIASTRA Institute & ICBS — NASA Space Apps Challenge 2026
+  SI disclosure: this page was written with the assistance of an AI coding
+  assistant (Claude, Anthropic). Concept and content direction by the team.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BioOrbit — Your health, in orbit</title>
+  <meta name="description" content="BioOrbit is an offline-first health monitoring and decision-support app for astronauts on long-duration missions, and for remote care on Earth. By LIASTRA Institute & ICBS for NASA Space Apps 2026.">
+  <meta name="generator" content="Hand-written HTML/CSS/JS; code written with AI assistance (Claude, Anthropic)">
+  <meta name="theme-color" content="#071430">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M68 20.8A36 36 0 1 0 24.5 77.5' fill='none' stroke='%230b1f3a' stroke-width='11' stroke-linecap='round'/%3E%3Cpath d='M17 76h12l7-14 8 27 6-10c14-1 26-8 32-20 3-6 4-11 4-17' fill='none' stroke='%230b6bed' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='80' cy='21' r='8' fill='%230b6bed'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site/site.css">
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a href="#top" class="nav-logo" aria-label="BioOrbit home">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M68 20.8A36 36 0 1 0 24.5 77.5" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round"/><path d="M17 76h12l7-14 8 27 6-10c14-1 26-8 32-20 3-6 4-11 4-17" fill="none" stroke="#3b9bff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="80" cy="21" r="8" fill="#3b9bff"/></svg>
+      <span>BioOrbit</span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#features">Features</a>
+      <a href="#demo">Live demo</a>
+      <a href="#how">How it works</a>
+      <a href="#science">Science</a>
+      <a href="#team">Team</a>
+    </nav>
+    <a href="app.html" class="nav-cta">Open app</a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="mesh" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
+    <div class="grid-lines" aria-hidden="true"></div>
+    <div class="hero-in">
+      <a class="badge reveal" href="#team"><span class="dot"></span> NASA Space Apps Challenge 2026 · Health Monitoring</a>
+      <h1 class="reveal d1">Your health.<br><span class="grad-text">In orbit.</span></h1>
+      <p class="lead reveal d2">BioOrbit is the health co-pilot for astronauts on long-duration missions. Measure, understand and act on your body's signals, even when Earth is 22 light-minutes away.</p>
+      <div class="cta-row reveal d3">
+        <a href="app.html" class="btn btn-primary">Launch BioOrbit <span>→</span></a>
+        <a href="#demo" class="btn btn-ghost">▶ Try the live demo</a>
+      </div>
+    </div>
+
+    <div class="devices reveal d4">
+      <div class="laptop">
+        <div class="laptop-screen">
+          <div class="frame-wrap" data-w="1440" data-h="900">
+            <iframe src="app.html?embed=1#bridge" title="BioOrbit desktop app preview" loading="eager" tabindex="-1"></iframe>
+          </div>
+        </div>
+        <div class="laptop-base"></div>
+      </div>
+      <div class="phone phone-hero">
+        <div class="phone-screen">
+          <div class="frame-wrap" data-w="390" data-h="844">
+            <iframe src="app.html?embed=1#trends" title="BioOrbit mobile app preview" loading="eager" tabindex="-1"></iframe>
+          </div>
+        </div>
+        <div class="notch"></div>
+      </div>
+      <div class="float-card fc1"><span class="fc-ico ok">✓</span><div><b>Heart rate 73 bpm</b><small>Nominal · camera pulse</small></div></div>
+      <div class="float-card fc2"><span class="fc-ico warn">!</span><div><b>Sleep drifting</b><small>−1.4 h vs your baseline</small></div></div>
+    </div>
+  </section>
+
+  <!-- ================= LOGO STRIP ================= -->
+  <section class="strip">
+    <p>A project by</p>
+    <div class="strip-logos">
+      <img src="assets/img/liastra-logo.png" alt="LIASTRA Institute">
+      <img src="assets/img/icbs-logo.webp" alt="ICBS – International Center for Biomedical & Space Sciences">
+      <span class="strip-sep"></span>
+      <img src="assets/img/space-apps-logo.png" alt="NASA Space Apps Challenge">
+    </div>
+  </section>
+
+  <!-- ================= STATEMENT (scroll highlight) ================= -->
+  <section class="statement" id="statement">
+    <p class="words">On Mars, help from Earth is up to twenty-two minutes away, and there is no way home. Astronauts must spot changes in their own bodies before they become emergencies. BioOrbit gives them the knowledge to do it.</p>
+  </section>
+
+  <!-- ================= STATS ================= -->
+  <section class="stats">
+    <div class="stat reveal"><b data-count="14">0</b><span>health indicators tracked and explained</span></div>
+    <div class="stat reveal d1"><b data-count="5">0</b><span>NASA spaceflight hazards mapped</span></div>
+    <div class="stat reveal d2"><b data-count="100" data-suffix="%">0</b><span>offline · no server, no cloud</span></div>
+    <div class="stat reveal d3"><b data-count="22" data-suffix=" min">0</b><span>max Earth delay it is designed for</span></div>
+  </section>
+
+  <!-- ================= FEATURES / BENTO ================= -->
+  <section class="section" id="features">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Features</span>
+      <h2>Everything a crew needs to care for itself.</h2>
+      <p>Designed with the questions NASA asks: which measurements can be done in space, what they mean, and when to call the flight surgeon.</p>
+    </div>
+
+    <div class="bento">
+      <article class="tile t-big reveal">
+        <div class="t-txt">
+          <span class="t-tag">Interactive body map</span>
+          <h3>See your whole body at a glance.</h3>
+          <p>Eight body systems, each colour-coded. Tap any of them to learn what it does, what spaceflight changes and what to do right now.</p>
+        </div>
+        <div class="t-vis body-vis">
+          <svg viewBox="0 0 200 330" aria-hidden="true">
+            <g fill="#eaf2ff" stroke="#9db8f2" stroke-width="1.5">
+              <ellipse cx="100" cy="36" rx="22" ry="26"/>
+              <path d="M66 80C84 74 116 74 134 80 150 86 152 104 150 120 147 150 140 175 138 200 137 216 140 228 136 238 116 246 84 246 64 238 60 228 63 216 62 200 60 175 53 150 50 120 48 104 50 86 66 80Z"/>
+            </g>
+            <g stroke="#9db8f2" stroke-width="18" stroke-linecap="round" fill="none"><path d="M56 96C40 136 32 180 28 230"/><path d="M144 96C160 136 168 180 172 230"/><path d="M84 238C80 280 80 300 82 326"/><path d="M116 238C120 280 120 300 118 326"/></g>
+            <g stroke="#eaf2ff" stroke-width="14.5" stroke-linecap="round" fill="none"><path d="M56 96C40 136 32 180 28 230"/><path d="M144 96C160 136 168 180 172 230"/><path d="M84 238C80 280 80 300 82 326"/><path d="M116 238C120 280 120 300 118 326"/></g>
+            <ellipse cx="100" cy="30" rx="15" ry="12" fill="#f59e0b" opacity=".55"/>
+            <ellipse cx="85" cy="122" rx="12" ry="21" fill="#10b981" opacity=".5"/><ellipse cx="115" cy="122" rx="12" ry="21" fill="#10b981" opacity=".5"/>
+            <path d="M106 145C97 138 93 132 96 127 99 122 104 123 106 128 108 123 113 122 116 127 119 132 115 138 106 145Z" fill="#ef4444" opacity=".7"/>
+            <ellipse cx="95" cy="176" rx="15" ry="10" fill="#10b981" opacity=".5"/>
+            <g class="pulse-dots"><circle cx="100" cy="30" r="5.5" fill="#f59e0b"/><circle cx="106" cy="134" r="5.5" fill="#ef4444"/><circle cx="82" cy="118" r="5.5" fill="#10b981"/><circle cx="95" cy="176" r="5.5" fill="#10b981"/></g>
+          </svg>
+        </div>
+      </article>
+
+      <article class="tile t-dark reveal d1">
+        <span class="t-tag">Camera pulse</span>
+        <h3>A heart-rate monitor in any phone.</h3>
+        <p>Put a fingertip on the camera. BioOrbit reads the tiny colour change of every heartbeat, and the image never leaves the device.</p>
+        <svg class="ecg" viewBox="0 0 300 80" aria-hidden="true"><path d="M0 40h60l10-18 12 40 10-34 8 12h40l10-18 12 40 10-34 8 12h40l10-18 12 40 10-34 8 12h20" fill="none" stroke="#ff5a7a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="bpm">72 <small>bpm</small></div>
+      </article>
+
+      <article class="tile reveal d2">
+        <span class="t-tag">Personal baselines</span>
+        <h3>Catches change before it's a problem.</h3>
+        <p>Every value is compared with your own baseline, so a slow drift gets flagged while it's still in the "normal" range.</p>
+        <svg class="drift" viewBox="0 0 300 110" aria-hidden="true">
+          <rect x="0" y="22" width="300" height="46" rx="8" fill="#e8f7f0"/>
+          <path d="M0 40 C40 36 70 44 110 40 S170 38 200 46 S250 72 300 84" fill="none" stroke="#0b6bed" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="300" cy="84" r="0"/><circle cx="262" cy="74" r="6" fill="#f59e0b" stroke="#fff" stroke-width="2"/>
+          <text x="6" y="16" font-size="11" fill="#5b6b8c" font-weight="700">reference range</text>
+        </svg>
+      </article>
+
+      <article class="tile reveal">
+        <span class="t-tag">Reaction test</span>
+        <h3>Fatigue screening from the ISS.</h3>
+        <p>A 3-minute vigilance test (PVT-B) measures reaction time and lapses, which are early signs of sleep loss.</p>
+        <div class="pvt-vis"><div class="pvt-dot"></div><span>287 ms</span></div>
+      </article>
+
+      <article class="tile t-grad reveal d1">
+        <span class="t-tag light">Delay-aware guidance</span>
+        <h3>Act first. Earth confirms later.</h3>
+        <p>Guidance and escalation adapt to the communication delay of the mission, from under 1 second on the ISS to 22 minutes on Mars.</p>
+        <div class="delay-vis"><span>🛰</span><i></i><span>🌍</span></div>
+      </article>
+
+      <article class="tile reveal d2">
+        <span class="t-tag">Gamified routine</span>
+        <h3>Healthy habits that stick.</h3>
+        <p>Timed prompts, XP, streaks and badges keep daily measurements part of the mission routine.</p>
+        <div class="badges-vis"><span>🚀</span><span>🔥</span><span>🦴</span><span>😴</span><span>📡</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= LIVE DEMO ================= -->
+  <section class="section demo" id="demo">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Live demo</span>
+      <h2>Don't just watch it. Try it.</h2>
+      <p>This is the real app running in your browser, loaded with a simulated 30-day mission and a 4-person crew. Click around.</p>
+    </div>
+    <div class="demo-controls reveal">
+      <div class="demo-tabs" id="demoTabs">
+        <button class="on" data-view="bridge">Bridge</button>
+        <button data-view="log">Log health</button>
+        <button data-view="trends">Trends</button>
+        <button data-view="pulse">Camera pulse</button>
+        <button data-view="reaction">Reaction test</button>
+        <button data-view="crew">Crew</button>
+        <button data-view="downlink">Downlink</button>
+      </div>
+      <div class="demo-device" id="demoDevice">
+        <button class="on" data-device="desktop">Desktop</button>
+        <button data-device="mobile">Mobile</button>
+      </div>
+    </div>
+    <div class="demo-stage reveal">
+      <div class="browser" id="demoDesktop">
+        <div class="browser-bar"><i></i><i></i><i></i><span>bioorbit · app</span></div>
+        <div class="frame-wrap interactive" data-w="1440" data-h="900">
+          <iframe id="demoFrameD" src="app.html?embed=1#bridge" title="BioOrbit live demo (desktop)" loading="lazy"></iframe>
+        </div>
+      </div>
+      <div class="phone phone-demo hidden" id="demoMobile">
+        <div class="phone-screen">
+          <div class="frame-wrap interactive" data-w="390" data-h="844">
+            <iframe id="demoFrameM" src="app.html?embed=1#bridge" title="BioOrbit live demo (mobile)" loading="lazy"></iframe>
+          </div>
+        </div>
+        <div class="notch"></div>
+      </div>
+    </div>
+    <p class="demo-note reveal">Tip: the demo saves data only in this browser. Open the <a href="app.html">full app</a> to use it fullscreen.</p>
+  </section>
+
+  <!-- ================= HOW IT WORKS ================= -->
+  <section class="section" id="how">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2>From a measurement to a decision in seconds.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><span class="n">01</span><h3>Measure</h3><p>Log vitals, sleep, mood and symptoms, or measure them with the camera pulse and reaction test. Every field explains how to measure it in space.</p></div>
+      <div class="step reveal d1"><span class="n">02</span><h3>Understand</h3><p>Values are classified against reference ranges and your personal baseline. Signals are combined into insights such as fatigue or possible infection.</p></div>
+      <div class="step reveal d2"><span class="n">03</span><h3>Act</h3><p>Each finding comes with clear onboard actions and a readiness score with duty status, so the crew knows what to do right now.</p></div>
+      <div class="step reveal d3"><span class="n">04</span><h3>Downlink</h3><p>A compact, structured report goes to the flight surgeon through any data link, and the app shows when it will arrive.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= ENVIRONMENTS ================= -->
+  <section class="section envs-sec">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Mission environments</span>
+      <h2>From low Earth orbit to the surface of Mars.</h2>
+      <p>Radiation dose, gravity, communication delay and escalation rules change with where the crew is.</p>
+    </div>
+    <div class="envs">
+      <div class="env reveal"><span class="e-ico">🛰</span><h3>Space Station</h3><dl><dt>Radiation</dt><dd>0.5 mSv/day</dd><dt>Gravity</dt><dd>~0 g</dd><dt>Delay</dt><dd>&lt; 1 s</dd></dl></div>
+      <div class="env reveal d1"><span class="e-ico">🌕</span><h3>Lunar Base</h3><dl><dt>Radiation</dt><dd>1.37 mSv/day</dd><dt>Gravity</dt><dd>0.17 g</dd><dt>Delay</dt><dd>~1.3 s</dd></dl></div>
+      <div class="env reveal d2"><span class="e-ico">🚀</span><h3>Mars Transit</h3><dl><dt>Radiation</dt><dd>1.84 mSv/day</dd><dt>Gravity</dt><dd>~0 g</dd><dt>Delay</dt><dd>3–22 min</dd></dl></div>
+      <div class="env reveal d3"><span class="e-ico">🔴</span><h3>Mars Surface</h3><dl><dt>Radiation</dt><dd>0.64 mSv/day</dd><dt>Gravity</dt><dd>0.38 g</dd><dt>Delay</dt><dd>3–22 min</dd></dl></div>
+      <div class="env env-earth reveal d4"><span class="e-ico">🌍</span><h3>Earth Remote Care</h3><dl><dt>Use</dt><dd>Telemedicine</dd><dt>Where</dt><dd>Remote areas</dd><dt>Delay</dt><dd>Real time</dd></dl></div>
+    </div>
+  </section>
+
+  <!-- ================= SCIENCE ================= -->
+  <section class="section science" id="science">
+    <div class="science-in">
+      <div class="reveal">
+        <span class="eyebrow light">Built on NASA science</span>
+        <h2>The five hazards of human spaceflight.</h2>
+        <p>NASA's Human Research Program maps five hazards. Every indicator in BioOrbit is linked to at least one of them, and the in-app library explains what to monitor and the countermeasures for each.</p>
+        <a class="btn btn-white" href="https://www.nasa.gov/hrp/hazards/" target="_blank" rel="noopener">NASA HRP hazards ↗</a>
+      </div>
+      <ul class="hazards">
+        <li class="reveal"><span>☢</span><div><b>Space radiation</b><small>Dose tracking vs. the 600 mSv career limit</small></div></li>
+        <li class="reveal d1"><span>◉</span><div><b>Isolation &amp; confinement</b><small>Mood, stress, sleep and reaction time</small></div></li>
+        <li class="reveal d2"><span>↔</span><div><b>Distance from Earth</b><small>Autonomous, delay-aware decisions</small></div></li>
+        <li class="reveal d3"><span>⇵</span><div><b>Gravity fields</b><small>Heart, bone, muscle and vision (SANS)</small></div></li>
+        <li class="reveal d4"><span>⌂</span><div><b>Hostile closed environments</b><small>SpO₂, breathing, temperature and infection</small></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= EARTH IMPACT ================= -->
+  <section class="section impact">
+    <div class="impact-card reveal">
+      <div>
+        <span class="eyebrow">Beyond space</span>
+        <h2>Built for Mars.<br>Useful on Earth.</h2>
+        <p>The same offline, delay-tolerant design helps people far from hospitals: remote and riverside communities, Antarctic stations, ships at sea and home monitoring connected to telemedicine.</p>
+      </div>
+      <div class="impact-points">
+        <div><b>Offline-first</b><span>Works with no connection at all</span></div>
+        <div><b>Any device</b><span>Phone, tablet or laptop</span></div>
+        <div><b>Private</b><span>Data stays on the device</span></div>
+        <div><b>Explains itself</b><span>No medical training needed</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TEAM ================= -->
+  <section class="section team" id="team">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Team</span>
+      <h2>Made in Brazil, for space.</h2>
+      <p>BioOrbit is developed by LIASTRA Institute and ICBS for the NASA Space Apps Challenge 2026, challenge “Create Health Monitoring Software for Astronauts on Space Missions”. Local event: São Gonçalo, Brazil.</p>
+    </div>
+    <div class="team-logos">
+      <div class="logo-card reveal"><img src="assets/img/liastra-logo.png" alt="LIASTRA Institute"><span>Developed by</span></div>
+      <div class="logo-card reveal d1"><img src="assets/img/icbs-logo.webp" alt="ICBS – International Center for Biomedical & Space Sciences"><span>Developed by</span></div>
+      <div class="logo-card reveal d2"><img src="assets/img/space-apps-logo.png" alt="NASA Space Apps Challenge"><span>Competing in</span></div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL CTA ================= -->
+  <section class="final">
+    <div class="mesh" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+    <div class="final-in reveal">
+      <div class="final-logo"><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M68 20.8A36 36 0 1 0 24.5 77.5" fill="none" stroke="#0b1f3a" stroke-width="11" stroke-linecap="round"/><path d="M17 76h12l7-14 8 27 6-10c14-1 26-8 32-20 3-6 4-11 4-17" fill="none" stroke="#0b6bed" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="80" cy="21" r="8" fill="#0b6bed"/></svg></div>
+      <h2>Ready for launch.</h2>
+      <p>Free, open source and running in your browser right now.</p>
+      <div class="cta-row">
+        <a href="app.html" class="btn btn-primary">Launch BioOrbit <span>→</span></a>
+        <a href="https://github.com/aniramanin/bioorbit" class="btn btn-ghost" id="ghLink" target="_blank" rel="noopener">View source on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <b>BioOrbit</b> · Astronaut Health OS<br>
+      <small>A project by LIASTRA Institute &amp; ICBS – International Center for Biomedical &amp; Space Sciences · NASA Space Apps Challenge 2026.</small>
+    </div>
+    <small class="foot-note">Decision-support prototype, not a medical device. Source code written with the assistance of an AI coding assistant (Claude, Anthropic). NASA does not endorse this project.</small>
+  </div>
+</footer>
+
+<script src="assets/site/site.js"></script>
+</body>
+</html>
