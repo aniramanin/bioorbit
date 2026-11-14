@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BioOrbit Reel</title>
+<!-- BioOrbit — 30 s vertical reel (1080×1920), rendered frame by frame with render(t).
+     SI disclosure: this motion-graphics page and the video rendered from it were produced with the
+     assistance of an AI coding assistant (Claude, Anthropic). App screens are real captures of BioOrbit. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --navy: #0b1f3a; --blue: #0b6bed; --sky: #3b9bff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+  body { font-family: 'Open Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+  .layer { position: absolute; inset: 0; }
+  .abs { position: absolute; }
+  .center { left: 0; right: 0; text-align: center; }
+  #bgDark { background: radial-gradient(1200px 900px at 50% 40%, #0c1d38 0%, #050b16 55%, #02050a 100%); }
+  #bgLight { background: radial-gradient(1100px 900px at 50% 0%, #ffffff 0%, #eef4ff 45%, #dce9ff 100%); }
+  #stars { opacity: .9; }
+  .glow { position: absolute; border-radius: 50%; filter: blur(10px); }
+  .h { font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; }
+  .w { display: inline-block; will-change: transform, opacity, filter; }
+  .grad-mars { background: linear-gradient(90deg, #ff9a4d, #ff4d3d); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-blue { background: linear-gradient(90deg, #0b6bed, #3b9bff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .grad-ice { background: linear-gradient(90deg, #7cc4ff, #ffffff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .dark-t { color: #fff; }
+  .light-t { color: var(--navy); }
+  .sub { font-weight: 600; font-size: 34px; letter-spacing: -0.01em; }
+
+  /* phone */
+  .phone { position: absolute; width: 592px; height: 1244px; border-radius: 92px; background: #0a0a0c;
+           padding: 16px; box-shadow: 0 60px 120px rgba(11,31,58,.35), 0 0 0 3px #2a2d33 inset, 0 0 0 2px #50545c; }
+  .screen { position: relative; width: 560px; height: 1212px; border-radius: 76px; overflow: hidden; background: rgb(243,246,252); }
+  .screen .sb { position: absolute; top: 0; left: 0; right: 0; height: 66px; background: rgb(243,246,252); z-index: 3;
+                display: flex; align-items: center; justify-content: space-between; padding: 8px 54px 0 64px;
+                font-weight: 700; font-size: 24px; color: #0b1f3a; }
+  .screen .sb i { display: inline-block; width: 40px; height: 18px; border: 2.5px solid #0b1f3a; border-radius: 6px; position: relative; }
+  .screen .sb i::after { content: ''; position: absolute; inset: 2px; right: 8px; background: #0b1f3a; border-radius: 2px; }
+  .screen .scroll { position: absolute; top: 66px; left: 0; width: 560px; will-change: transform; }
+  .screen .scroll img { width: 560px; display: block; }
+  .screen .tab { position: absolute; left: 0; bottom: 0; width: 560px; z-index: 2; }
+  .island { position: absolute; top: 34px; left: 50%; width: 170px; height: 48px; margin-left: -85px; background: #000; border-radius: 30px; z-index: 5; }
+
+  /* pulse */
+  #finger { position: absolute; left: 50%; top: 760px; width: 520px; height: 520px; margin-left: -260px; border-radius: 50%;
+            background: radial-gradient(circle at 45% 40%, #ff8a7a 0%, #e8233a 38%, #8d0a1e 72%, #3a0510 100%);
+            box-shadow: 0 0 160px 40px rgba(255,40,70,.45); }
+  #bpm { position: absolute; left: 0; right: 0; top: 1520px; text-align: center; color: #fff; }
+  #bpm b { font-size: 150px; font-weight: 800; letter-spacing: -0.04em; }
+  #bpm span { font-size: 46px; font-weight: 700; color: #ff8a8a; margin-left: 10px; }
+  #ppg { position: absolute; left: 90px; top: 1340px; }
+
+  /* reaction */
+  #rt { position: absolute; left: 50%; top: 760px; width: 560px; height: 560px; margin-left: -280px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; flex-direction: column; color: #fff; }
+  #rtRing { position: absolute; left: 50%; top: 1040px; width: 560px; height: 560px; border-radius: 50%; border: 6px solid #3b9bff; }
+
+  /* environments */
+  #envTrack { position: absolute; top: 640px; left: 0; height: 900px; display: flex; gap: 0; will-change: transform; }
+  .env { width: 1080px; height: 900px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; color: #fff; }
+  .planet { width: 440px; height: 440px; border-radius: 50%; margin-bottom: 60px; }
+  .env small { font-size: 34px; font-weight: 600; color: rgba(255,255,255,.62); letter-spacing: .14em; text-transform: uppercase; }
+  .env b { font-size: 140px; font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; }
+  .env em { font-style: normal; font-size: 34px; font-weight: 600; color: rgba(255,255,255,.72); }
+
+  /* end card */
+  .pill { display: inline-block; padding: 22px 44px; border-radius: 999px; background: linear-gradient(90deg, #0b6bed, #3b9bff); color: #fff;
+          font-weight: 700; font-size: 38px; box-shadow: 0 24px 60px rgba(11,107,237,.35); }
+  #wm { position: absolute; right: 36px; bottom: 34px; padding: 10px 20px; border-radius: 999px; background: rgba(0,0,0,.38);
+        color: rgba(255,255,255,.88); font-size: 22px; font-weight: 600; letter-spacing: .02em; z-index: 50; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="bgDark"></div>
+  <canvas class="layer" id="stars" width="1080" height="1920"></canvas>
+  <div class="layer" id="bgLight"></div>
+  <div class="glow" id="glowA"></div>
+  <div class="glow" id="glowB"></div>
+
+  <!-- S1 -->
+  <div class="abs center h dark-t" id="s1" style="top:700px;font-size:128px">
+    <div><span class="w">On</span> <span class="w">Mars,</span></div>
+    <div><span class="w">help</span> <span class="w">is</span></div>
+    <div><span class="w grad-mars">22</span> <span class="w grad-mars">minutes</span></div>
+    <div><span class="w">away.</span></div>
+  </div>
+  <!-- S2 -->
+  <div class="abs center h dark-t" id="s2a" style="top:760px;font-size:112px">
+    <div><span class="w">No</span> <span class="w">doctor</span></div><div><span class="w">on</span> <span class="w">board.</span></div>
+  </div>
+  <div class="abs center h" id="s2b" style="top:850px;font-size:118px">
+    <div><span class="w grad-ice">No</span> <span class="w grad-ice">way</span> <span class="w grad-ice">home.</span></div>
+  </div>
+  <!-- S3 logo -->
+  <div class="abs center" id="s3" style="top:700px">
+    <img id="logo3" src="../assets/img/bioorbit-logo.webp" style="width:760px">
+    <div class="h light-t" id="s3t" style="font-size:76px;margin-top:40px"><span class="w">The</span> <span class="w">health</span> <span class="w">OS</span> <span class="w">for</span><br><span class="w grad-blue">deep</span> <span class="w grad-blue">space.</span></div>
+  </div>
+  <!-- S4 -->
+  <div class="abs center h light-t" id="s4a" style="top:190px;font-size:100px"><div><span class="w">Readiness,</span></div><div><span class="w grad-blue">at</span> <span class="w grad-blue">a</span> <span class="w grad-blue">glance.</span></div></div>
+  <div class="abs center h light-t" id="s4b" style="top:190px;font-size:100px"><div><span class="w">Your</span> <span class="w">body,</span></div><div><span class="w grad-blue">colour-coded.</span></div></div>
+  <div class="phone" id="ph4" style="left:244px;top:560px"><div class="screen"><div class="sb">9:41<i></i></div><div class="scroll"><img src="src/bridge.jpg"></div><img class="tab" src="src/tab-bridge.png"></div><div class="island"></div></div>
+  <!-- S5 -->
+  <div class="abs center h light-t" id="s5" style="top:190px;font-size:96px"><div><span class="w">Spots</span> <span class="w">the</span> <span class="w">drift</span></div><div><span class="w grad-blue">before</span> <span class="w grad-blue">it's</span> <span class="w grad-blue">critical.</span></div></div>
+  <div class="abs center sub" id="s5s" style="top:430px;color:#4a6185">Personal baselines · multi-signal insights</div>
+  <div class="phone" id="ph5l" style="left:244px;top:620px"><div class="screen"><div class="sb">9:41<i></i></div><div class="scroll"><img src="src/crew.jpg"></div><img class="tab" src="src/tab-crew.png"></div><div class="island"></div></div>
+  <div class="phone" id="ph5r" style="left:244px;top:620px"><div class="screen"><div class="sb">9:41<i></i></div><div class="scroll"><img src="src/log.jpg"></div><img class="tab" src="src/tab-bridge.png"></div><div class="island"></div></div>
+  <div class="phone" id="ph5c" style="left:244px;top:620px"><div class="screen"><div class="sb">9:41<i></i></div><div class="scroll"><img src="src/trends.jpg"></div><img class="tab" src="src/tab-trends.png"></div><div class="island"></div></div>
+  <!-- S6 pulse -->
+  <div class="abs center h dark-t" id="s6" style="top:230px;font-size:110px"><div><span class="w">Heart</span> <span class="w">rate.</span></div><div><span class="w" style="color:#ff6b6b">Just</span> <span class="w" style="color:#ff6b6b">a</span> <span class="w" style="color:#ff6b6b">fingertip.</span></div></div>
+  <div class="abs center sub" id="s6s" style="top:500px;color:rgba(255,255,255,.66)">Phone-camera photoplethysmography · no extra hardware</div>
+  <div id="finger"></div>
+  <canvas id="ppg" width="900" height="170"></canvas>
+  <div id="bpm"><b id="bpmN">0</b><span>bpm</span></div>
+  <!-- S7 reaction -->
+  <div class="abs center h dark-t" id="s7" style="top:230px;font-size:110px"><div><span class="w">Fatigue?</span></div><div><span class="w grad-ice">Caught</span> <span class="w grad-ice">in</span> <span class="w grad-ice">3</span> <span class="w grad-ice">min.</span></div></div>
+  <div class="abs center sub" id="s7s" style="top:500px;color:rgba(255,255,255,.66)">PVT-B · the vigilance test validated for spaceflight</div>
+  <div id="rtRing"></div>
+  <div id="rt"><div id="rtTxt" style="font-size:60px;font-weight:800;letter-spacing:.12em">READY</div><div id="rtSub" style="font-size:34px;font-weight:600;opacity:.75;margin-top:10px"></div></div>
+  <div class="abs center sub" id="s7r" style="top:1440px;color:#fff"><span style="opacity:.6">Lapses</span> 0 &nbsp;·&nbsp; <span style="opacity:.6">Mean</span> 251 ms &nbsp;·&nbsp; <span style="color:#5be3a3">Fit for EVA</span></div>
+  <!-- S8 environments -->
+  <div class="abs center h dark-t" id="s8" style="top:230px;font-size:110px"><div><span class="w">From</span> <span class="w">orbit</span></div><div><span class="w grad-mars">to</span> <span class="w grad-mars">Mars.</span></div></div>
+  <div id="envTrack">
+    <div class="env"><div class="planet" style="background:radial-gradient(circle at 35% 30%,#bfe6ff 0%,#3b9bff 30%,#0b4fb0 62%,#041a3d 100%);box-shadow:0 0 120px rgba(59,155,255,.5)"></div><small>Space Station · comms delay</small><b>&lt; 1 s</b><em>Flight surgeon on call</em></div>
+    <div class="env"><div class="planet" style="background:radial-gradient(circle at 35% 30%,#ffffff 0%,#c9ced8 30%,#7d8594 65%,#2a2e36 100%);box-shadow:0 0 120px rgba(220,225,235,.35)"></div><small>Lunar base · comms delay</small><b>1.3 s</b><em>Days to evacuate</em></div>
+    <div class="env"><div class="planet" style="background:radial-gradient(circle at 35% 30%,#ffc59a 0%,#ff6a3d 32%,#a8301a 66%,#3a0e06 100%);box-shadow:0 0 140px rgba(255,90,50,.5)"></div><small>Mars · comms delay up to</small><b>22 min</b><em>The crew decides first</em></div>
+  </div>
+  <div class="abs center sub" id="s8s" style="top:1600px;color:rgba(255,255,255,.75)">Fully offline · advice adapts to the delay</div>
+  <!-- S9 end card -->
+  <div class="abs center" id="s9" style="top:560px">
+    <img src="../assets/img/bioorbit-logo.webp" style="width:700px">
+    <div class="h light-t" style="font-size:64px;margin-top:30px">Astronaut <span class="grad-blue">Health OS</span></div>
+    <div style="margin-top:70px"><span class="pill">aniramanin.github.io/bioorbit</span></div>
+    <div style="margin-top:150px;display:flex;justify-content:center;align-items:center;gap:70px">
+      <img src="../assets/img/liastra-logo.png" style="height:96px;mix-blend-mode:multiply">
+      <img src="../assets/img/icbs-logo.webp" style="height:120px">
+    </div>
+    <div style="margin-top:46px;font-size:32px;font-weight:700;color:#0b1f3a">Team ICBS · LIASTRA Institute</div>
+    <div style="margin-top:12px;font-size:28px;font-weight:600;color:#4a6185">NASA Space Apps Challenge 2026 · São Gonçalo, Brazil</div>
+  </div>
+  <div id="wm">SI-assisted production</div>
+</div>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lin = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = p => 1 - Math.pow(1 - p, 3);
+const eExpo = p => (p >= 1 ? 1 : 1 - Math.pow(2, -10 * p));
+const eIO = p => (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const mix = (a, b, p) => a + (b - a) * p;
+const win = (t, a, b, fi = .45, fo = .45) => clamp((t - a) / fi) * clamp((b - t) / fo);
+
+/* stars (deterministic) */
+(() => {
+  const c = $('#stars').getContext('2d'); let s = 7;
+  const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 260; i++) {
+    const r = rnd() * 1.8 + .3; c.globalAlpha = rnd() * .7 + .15; c.fillStyle = '#fff';
+    c.beginPath(); c.arc(rnd() * 1080, rnd() * 1920, r, 0, 7); c.fill();
+  }
+})();
+
+/* word-by-word reveal: blur + rise, Apple keynote style */
+function words(el, t, t0, step = .09, out = null) {
+  const ws = el.querySelectorAll('.w');
+  ws.forEach((w, i) => {
+    const p = eExpo(lin(t, t0 + i * step, t0 + i * step + .7));
+    let o = p, y = (1 - p) * 60, b = (1 - p) * 14;
+    if (out !== null) { const q = eIO(lin(t, out, out + .4)); o *= 1 - q; y -= q * 30; b += q * 10; }
+    w.style.opacity = o; w.style.transform = `translateY(${y}px)`; w.style.filter = `blur(${b}px)`;
+  });
+  el.style.display = (t > t0 - .1 && (out === null || t < out + .45)) ? '' : 'none';
+}
+function show(el, o, tf = '') { el.style.opacity = o; el.style.display = o > .001 ? '' : 'none'; if (tf !== null) el.style.transform = tf; }
+function phone(el, o, x, y, s, r, scrollImgPx) {
+  show(el, o, `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`);
+  el.querySelector('.scroll').style.transform = `translateY(${-scrollImgPx * 560 / 1170}px)`;
+}
+
+/* PPG waveform */
+const ppg = $('#ppg').getContext('2d');
+function ppgWave(x) { // x in beats
+  const f = x - Math.floor(x);
+  return Math.exp(-Math.pow((f - .18) / .07, 2)) + .38 * Math.exp(-Math.pow((f - .45) / .09, 2));
+}
+function drawPPG(t, o) {
+  ppg.clearRect(0, 0, 900, 170);
+  if (o <= 0) return;
+  const bps = 72 / 60, reveal = clamp((t - 15.8) / 1.2);
+  ppg.lineWidth = 6; ppg.lineCap = 'round'; ppg.lineJoin = 'round';
+  const g = ppg.createLinearGradient(0, 0, 900, 0);
+  g.addColorStop(0, 'rgba(255,90,110,0)'); g.addColorStop(.25, 'rgba(255,90,110,.9)'); g.addColorStop(1, '#ffd0d6');
+  ppg.strokeStyle = g; ppg.beginPath();
+  const n = Math.floor(900 * reveal);
+  for (let px = 0; px <= n; px++) {
+    const beat = (t * bps) - (900 - px) / 300 * bps * 1.0;
+    const y = 140 - ppgWave(beat) * 110;
+    px ? ppg.lineTo(px, y) : ppg.moveTo(px, y);
+  }
+  ppg.stroke();
+  if (n > 0) { // leading dot
+    const beat = t * bps - (900 - n) / 300 * bps; const y = 140 - ppgWave(beat) * 110;
+    ppg.fillStyle = '#fff'; ppg.beginPath(); ppg.arc(n, y, 9, 0, 7); ppg.fill();
+  }
+}
+
+function render(t) {
+  /* background: dark → light → dark → light */
+  const light = Math.max(win(t, 5.3, 15.5, .12, .15), lin(t, 25.4, 25.55));
+  $('#bgLight').style.opacity = light;
+  $('#stars').style.opacity = (1 - light) * .9;
+  $('#stars').style.transform = `translateY(${-t * 6}px) scale(1.05)`;
+
+  /* glows */
+  const gA = $('#glowA'), gB = $('#glowB');
+  let a = { x: 540, y: 2050, r: 900, c: 'rgba(255,90,40,.55)', o: win(t, 0, 5.4, .8, .5) };
+  if (t >= 5.2 && t < 15.6) a = { x: 540, y: 300, r: 1000, c: 'rgba(59,155,255,.30)', o: win(t, 5.2, 15.6, .6, .4) };
+  if (t >= 15.4 && t < 18.9) a = { x: 540, y: 1020, r: 900, c: 'rgba(255,30,70,.32)', o: win(t, 15.4, 18.9, .5, .4) * (0.85 + .15 * Math.sin(t * 7.54)) };
+  if (t >= 18.9 && t < 22.1) a = { x: 540, y: 1040, r: 900, c: 'rgba(59,155,255,.30)', o: win(t, 18.9, 22.1, .4, .4) };
+  if (t >= 22.1 && t < 25.6) a = { x: 540, y: 980, r: 1000, c: ['rgba(59,155,255,.28)', 'rgba(200,210,230,.18)', 'rgba(255,90,50,.32)'][Math.min(2, Math.floor((t - 22.1) / 1.1))], o: win(t, 22.1, 25.6, .4, .4) };
+  if (t >= 25.6) a = { x: 540, y: 300, r: 1100, c: 'rgba(59,155,255,.30)', o: lin(t, 25.6, 26.3) };
+  Object.assign(gA.style, { left: a.x - a.r / 2 + 'px', top: a.y - a.r / 2 + 'px', width: a.r + 'px', height: a.r + 'px',
+    background: `radial-gradient(circle, ${a.c} 0%, rgba(0,0,0,0) 65%)`, opacity: a.o });
+  Object.assign(gB.style, { left: '-200px', top: '1300px', width: '900px', height: '900px', opacity: light * .8,
+    background: 'radial-gradient(circle, rgba(124,196,255,.35) 0%, rgba(0,0,0,0) 65%)' });
+
+  /* S1 0–2.8 */
+  const s1 = $('#s1'); words(s1, t, .25, .16, 2.55);
+  s1.style.transform = `scale(${1 + t * .012})`;
+  /* S2 2.8–5.4 */
+  words($('#s2a'), t, 2.85, .12, 3.95);
+  words($('#s2b'), t, 4.1, .12, 5.1);
+  $('#s2b').style.transform = `scale(${1 + clamp(t - 4.1, 0, 1.2) * .05})`;
+
+  /* S3 logo 5.4–8.2 */
+  const p3 = eExpo(lin(t, 5.45, 6.6)), o3 = win(t, 5.4, 8.25, .5, .4);
+  show($('#s3'), o3, `translateY(${(1 - p3) * 40 - lin(t, 7.8, 8.25) * 40}px)`);
+  $('#logo3').style.transform = `scale(${mix(.82, 1, p3) + lin(t, 6.6, 8.2) * .03})`;
+  $('#logo3').style.filter = `blur(${(1 - p3) * 16}px)`;
+  words($('#s3t'), t, 6.35, .09, 7.85);
+
+  /* S4 8.2–12.1: phone rises, scrolls to body map */
+  words($('#s4a'), t, 8.3, .1, 10.05);
+  words($('#s4b'), t, 10.3, .1, 11.85);
+  const rise = eExpo(lin(t, 8.25, 9.4)), leave = eIO(lin(t, 11.75, 12.25));
+  const scroll4 = eIO(lin(t, 9.9, 11.3)) * 5268;
+  const zoom4 = 1 + eIO(lin(t, 10.2, 11.6)) * .12;
+  phone($('#ph4'), win(t, 8.2, 12.25, .2, .35), 0, (1 - rise) * 1300 + leave * 120, zoom4 - leave * .08, 0, scroll4);
+
+  /* S5 12.1–15.5: three phones fan */
+  words($('#s5'), t, 12.2, .08, 15.15);
+  show($('#s5s'), win(t, 12.8, 15.45, .5, .35), `translateY(${(1 - eOut(lin(t, 12.8, 13.4))) * 20}px)`);
+  const f = k => eExpo(lin(t, 12.15 + k * .12, 13.3 + k * .12));
+  const out5 = eIO(lin(t, 15.05, 15.5));
+  const o5 = win(t, 12.1, 15.5, .25, .4);
+  phone($('#ph5l'), o5, mix(0, -330, f(1)), mix(1300, 140, f(1)) + out5 * 200, .78, mix(0, -9, f(1)), 0);
+  phone($('#ph5r'), o5, mix(0, 330, f(2)), mix(1300, 140, f(2)) + out5 * 200, .78, mix(0, 9, f(2)), 0);
+  phone($('#ph5c'), o5, 0, mix(1300, 40, f(0)) + out5 * 200, .9, 0, eIO(lin(t, 13.3, 15.2)) * 900);
+
+  /* S6 15.5–18.9: camera pulse */
+  words($('#s6'), t, 15.6, .09, 18.55);
+  show($('#s6s'), win(t, 16.1, 18.85, .5, .35), null);
+  const beat = (t * 72 / 60) % 1, thump = Math.exp(-Math.pow((beat - .18) / .08, 2));
+  const in6 = eExpo(lin(t, 15.55, 16.5));
+  show($('#finger'), win(t, 15.5, 18.9, .3, .35), `scale(${mix(.6, 1, in6) + thump * .045})`);
+  $('#finger').style.boxShadow = `0 0 ${140 + thump * 80}px ${30 + thump * 30}px rgba(255,40,70,${.35 + thump * .25})`;
+  const o6 = win(t, 15.8, 18.9, .4, .35);
+  $('#ppg').style.opacity = o6; drawPPG(t, o6);
+  show($('#bpm'), win(t, 16.2, 18.9, .4, .35), `translateY(${(1 - eOut(lin(t, 16.2, 16.8))) * 30}px)`);
+  $('#bpmN').textContent = Math.round(eOut(lin(t, 16.3, 17.6)) * 72);
+
+  /* S7 18.9–22.1: reaction test */
+  words($('#s7'), t, 19.0, .08, 21.75);
+  show($('#s7s'), win(t, 19.5, 22.05, .5, .35), null);
+  const o7 = win(t, 18.9, 22.1, .3, .35), in7 = eExpo(lin(t, 18.95, 19.8));
+  const go = t >= 19.95, tapped = t >= 20.2;
+  const rt = $('#rt');
+  show(rt, o7, `scale(${mix(.7, 1, in7) * (tapped ? 1 - .05 * Math.exp(-(t - 20.2) * 8) : 1)})`);
+  rt.style.background = go ? (tapped ? 'radial-gradient(circle at 40% 35%, #6fb6ff, #0b6bed 60%, #06357a)' : 'radial-gradient(circle at 40% 35%, #9fd0ff, #3b9bff 60%, #0b4fb0)')
+                           : 'rgba(255,255,255,.06)';
+  rt.style.border = go ? '0' : '5px solid rgba(255,255,255,.55)';
+  rt.style.boxShadow = go ? '0 0 160px 30px rgba(59,155,255,.45)' : 'none';
+  $('#rtTxt').textContent = tapped ? Math.round(eOut(lin(t, 20.2, 20.7)) * 248) + ' ms' : (go ? 'TAP!' : 'READY');
+  $('#rtTxt').style.fontSize = tapped ? '120px' : '60px';
+  $('#rtTxt').style.letterSpacing = tapped ? '-0.03em' : '.12em';
+  $('#rtSub').textContent = tapped ? 'reaction time' : '';
+  const rp = lin(t, 20.2, 21.0);
+  show($('#rtRing'), o7 * (t > 20.2 ? (1 - rp) : 0), `translate(-50%,-50%) scale(${1 + eOut(rp) * .5})`);
+  show($('#s7r'), win(t, 20.6, 22.05, .45, .35), `translateY(${(1 - eOut(lin(t, 20.6, 21.1))) * 24}px)`);
+
+  /* S8 22.1–25.5: environments carousel */
+  words($('#s8'), t, 22.2, .09, 25.15);
+  const o8 = win(t, 22.1, 25.5, .3, .4);
+  const k1 = eIO(lin(t, 23.0, 23.5)), k2 = eIO(lin(t, 24.05, 24.55));
+  const in8 = eExpo(lin(t, 22.1, 22.9));
+  show($('#envTrack'), o8, `translateX(${-(k1 + k2) * 1080 + (1 - in8) * 300}px)`);
+  document.querySelectorAll('.planet').forEach((p, i) => {
+    const focus = 1 - Math.min(1, Math.abs((k1 + k2) - i));
+    p.style.transform = `scale(${.82 + .18 * focus}) rotate(${t * 4}deg)`;
+  });
+  show($('#s8s'), win(t, 22.6, 25.45, .5, .35), null);
+
+  /* S9 25.5–30: end card */
+  const p9 = eExpo(lin(t, 25.55, 26.7));
+  show($('#s9'), lin(t, 25.5, 26.0), `translateY(${(1 - p9) * 50}px) scale(${mix(.94, 1, p9) + lin(t, 26.7, 30) * .015})`);
+}
+window.render = render;
+window.ready = Promise.all([document.fonts.ready, ...[...document.images].map(i => i.decode().catch(() => {}))]);
+render(+(new URLSearchParams(location.search).get('t') || 0));
+</script>
+</body>
+</html>
