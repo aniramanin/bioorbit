@@ -7,7 +7,7 @@ Team: **ICBS – International Center for Biomedical & Space Sciences, LIASTRA I
 
 **🌐 Live website (with interactive demo):** https://aniramanin.github.io/bioorbit/  
 **🚀 Open the app:** https://aniramanin.github.io/bioorbit/app.html  
-**🎞 Demo slides (7):** https://aniramanin.github.io/bioorbit/slides/  
+**🎞 Demo slides (7):** https://aniramanin.github.io/bioorbit/slides/ · [PDF](https://aniramanin.github.io/bioorbit/slides/BioOrbit-slides.pdf)  
 **💻 Source code:** https://github.com/aniramanin/bioorbit
 
 > ⚠️ BioOrbit is a decision-support prototype. It is not a medical device and does not replace a physician or flight surgeon.

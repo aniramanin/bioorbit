@@ -156,10 +156,13 @@ table.env td.src { font-size: 17px; color: rgba(255, 255, 255, .55); font-weight
 /* ---------- controls ---------- */
 .controls { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; z-index: 10; background: rgba(10, 20, 45, .75); backdrop-filter: blur(10px); padding: 8px 10px; border-radius: 999px; color: #fff; font: 600 14px 'Open Sans', sans-serif; transition: opacity .3s; }
 .controls button { border: 0; background: rgba(255, 255, 255, .12); color: #fff; width: 38px; height: 38px; border-radius: 50%; font-size: 18px; cursor: pointer; }
-.controls button:hover { background: rgba(255, 255, 255, .25); }
+.controls button:hover, .controls a.pdf:hover { background: rgba(255, 255, 255, .25); }
+.controls a.pdf { display: inline-grid; place-items: center; height: 38px; color: #fff; text-decoration: none; background: rgba(255, 255, 255, .12); }
 .controls .pdf { width: auto; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 700; }
 .progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--grad); z-index: 10; transition: width .4s; }
 body.idle .controls { opacity: 0; }
+.export .controls, .export .progress { display: none !important; }
+.export .slide { transition: none !important; }
 
 @media print {
   @page { size: 1920px 1080px; margin: 0; }
@@ -343,7 +346,7 @@ body.idle .controls { opacity: 0; }
   <button id="prev" aria-label="Previous slide">‹</button>
   <span id="count">1 / 7</span>
   <button id="next" aria-label="Next slide">›</button>
-  <button class="pdf" id="pdf" title="Save as PDF (choose landscape)">PDF</button>
+  <a class="pdf" id="pdf" href="BioOrbit-slides.pdf" download title="Download PDF">PDF</a>
   <button class="pdf" id="fs" title="Fullscreen">⛶</button>
 </div>
 
@@ -372,13 +375,13 @@ body.idle .controls { opacity: 0; }
   });
   document.getElementById('prev').onclick = () => show(i - 1);
   document.getElementById('next').onclick = () => show(i + 1);
-  document.getElementById('pdf').onclick = () => print();
   document.getElementById('fs').onclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen());
   let x0 = null;
   addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) show(i + (dx < 0 ? 1 : -1)); x0 = null; });
   let t; const idle = () => { document.body.classList.remove('idle'); clearTimeout(t); t = setTimeout(() => document.body.classList.add('idle'), 2500); };
   addEventListener('mousemove', idle); idle();
+  if (new URLSearchParams(location.search).has('export')) document.documentElement.classList.add('export');
   fit(); show(i);
 })();
 </script>

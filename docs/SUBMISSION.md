@@ -19,7 +19,8 @@
 BioOrbit is an offline-first health monitoring and decision-support app for astronauts on long-duration missions. Astronauts log vital signs, sleep, mood and symptoms. They can also measure heart rate with a phone camera and take a 3-minute reaction test that screens for fatigue. BioOrbit turns these data into a colour-coded interactive body map, a readiness score and clear actions. It compares every value with the astronaut's personal baseline to catch problems early, and it combines signals into insights such as fatigue or possible infection. Escalation advice adapts to the communication delay of each environment, from the ISS to Mars. A compact report can be sent to the flight surgeon. Because crews on Mars cannot rely on real-time help from Earth, BioOrbit gives them the knowledge and autonomy to assess and act on their own health. The same tool serves remote communities on Earth.
 
 ## Link to Project Demo
-https://aniramanin.github.io/bioorbit/slides/ — 7-slide presentation (use ← → to navigate; the PDF button saves a copy)
+https://aniramanin.github.io/bioorbit/slides/ — 7-slide presentation (use ← → to navigate)
+PDF version: https://aniramanin.github.io/bioorbit/slides/BioOrbit-slides.pdf
 
 ## Link to Final Project
 https://aniramanin.github.io/bioorbit/ — project website with live demo
