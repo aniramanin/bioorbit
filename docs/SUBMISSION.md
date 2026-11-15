@@ -21,6 +21,7 @@ BioOrbit is an offline-first health monitoring and decision-support app for astr
 ## Link to Project Demo
 https://aniramanin.github.io/bioorbit/slides/ — 7-slide presentation (use ← → to navigate)
 PDF version: https://aniramanin.github.io/bioorbit/slides/BioOrbit-slides.pdf
+30-second video (alternative): https://aniramanin.github.io/bioorbit/video/BioOrbit-reel.mp4
 
 ## Link to Final Project
 https://aniramanin.github.io/bioorbit/ — project website with live demo
