@@ -32,6 +32,7 @@ On a Mars mission the crew is up to ~22 light-minutes from Earth and cannot be e
 | **Reaction test (PVT-B)** | A 3-minute psychomotor vigilance test, like the one used on the ISS (lapses > 355 ms, false starts < 100 ms). It catches fatigue before you notice it yourself. |
 | **Mission environments** | Space Station, Lunar Base, Mars Transit, Mars Surface and **Earth Remote Care**. Radiation dose rate, gravity, communication delay and escalation advice all change with the environment. |
 | **Delay-aware escalation** | When the delay is long (Mars), guidance tells the crew to act on the onboard protocol first and confirm with Earth later. |
+| **Real NASA & NOAA data** | A *NASA data* page with (1) live solar-radiation storm status from NOAA's GOES ≥10 MeV proton flux (S0–S5 scale, 24 h chart, environment-specific EVA/shelter advice, cached for offline use) and (2) the real blood tests of the four SpaceX Inspiration4 astronauts from NASA OSDR (OSD-569 CBC, OSD-575 metabolic panel, 17 analytes, 7 time points). BioOrbit's personal-baseline rule is applied to the real data: for lymphocytes, 3 of 4 crew changed ≥15 % from their own pre-flight baseline the day after landing while staying inside the Earth reference range. |
 | **Downlink to the flight surgeon** | A compact structured report (TXT + JSON) with findings, actions and 7-day trends. A transmission animation shows the real arrival time. It can be printed or saved as PDF. |
 | **Crew overview** | Readiness of every crew member and a colour-coded heat-map of indicators, for the medical officer and the commander. |
 | **Mission routine & gamification** | Time-based prompts (morning vitals, glucose, PVT, exercise, hydration, evening check-in), XP, levels, streaks, 12 badges and a 30-day completion calendar. |
@@ -99,6 +100,9 @@ assets/js/app.js       User interface
 - NASA Human Research Program, *Risks of Human Spaceflight*: https://www.nasa.gov/hrp/risks/ (choice of monitored risks: cardiovascular, bone and muscle, behavioural health, sleep, nutrition, SANS, immune)
 - NASA Human Research Program, *Ongoing HRP Research in Space*: https://www.nasa.gov/hrp/ongoing-hrp-research/
 - NASA-STD-3001, career radiation limit
+- NASA Open Science Data Repository, **OSD-569** – SpaceX Inspiration4 complete blood count (LSDS-7): https://osdr.nasa.gov/bio/repo/data/studies/OSD-569 (real crew data on the *NASA data* page; file `assets/js/osdr-data.js`)
+- NASA Open Science Data Repository, **OSD-575** – SpaceX Inspiration4 comprehensive metabolic panel (LSDS-8): https://osdr.nasa.gov/bio/repo/data/studies/OSD-575
+- NOAA Space Weather Prediction Center, GOES integral proton flux (live JSON): https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json and NOAA Space Weather Scales: https://www.swpc.noaa.gov/noaa-scales-explanation
 
 ## Space agency partner resources
 - CSA, *Monitoring Radiation for Astronaut Health* (2026): radiation dose tracking concept

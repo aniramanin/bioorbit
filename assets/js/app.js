@@ -179,7 +179,7 @@
   $('#settingsBtn').addEventListener('click', () => openSettings());
 
   /* =========================== ROUTING =========================== */
-  const VIEWS = { bridge: renderBridge, log: renderLog, trends: renderTrends, pulse: renderPulse, reaction: renderReaction, crew: renderCrew, downlink: renderDownlink, library: renderLibrary, achievements: renderAchievements };
+  const VIEWS = { bridge: renderBridge, log: renderLog, trends: renderTrends, pulse: renderPulse, reaction: renderReaction, crew: renderCrew, downlink: renderDownlink, library: renderLibrary, nasa: renderNasa, achievements: renderAchievements };
   function route() {
     let v = (location.hash || '#bridge').slice(1).split('?')[0];
     if (!VIEWS[v]) v = 'bridge';
@@ -625,6 +625,120 @@
     }
     $('#trendWhy').innerHTML = `<p>${esc(d.why)}</p><h4 class="small" style="margin:14px 0 6px;text-transform:uppercase;letter-spacing:.14em">How to measure in space</h4><ol style="margin:0;padding-left:18px">${d.how.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
       <h4 class="small" style="margin:14px 0 6px;text-transform:uppercase;letter-spacing:.14em">Related NASA hazards</h4><div class="chips">${d.hazards.map(h => `<span class="tag">${A.HAZARDS[h].icon} ${esc(A.HAZARDS[h].name)}</span>`).join('')}</div>`;
+  }
+
+  /* =========================== NASA DATA (real data) =========================== */
+  // Two real data sources: live NOAA GOES proton flux (space weather) and NASA OSDR Inspiration4 crew blood tests.
+  const nasa = { analyte: 'Lymphocytes' };
+  const SW_URL = 'https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json';
+  const SW_KEY = 'bioorbit-spaceweather-v1';
+  function sScale(pfu) { // NOAA Solar Radiation Storm scale, >=10 MeV integral proton flux
+    if (pfu >= 1e5) return { s: 'S5', label: 'Extreme', lvl: 'critical' };
+    if (pfu >= 1e4) return { s: 'S4', label: 'Severe', lvl: 'critical' };
+    if (pfu >= 1e3) return { s: 'S3', label: 'Strong', lvl: 'alert' };
+    if (pfu >= 1e2) return { s: 'S2', label: 'Moderate', lvl: 'alert' };
+    if (pfu >= 10) return { s: 'S1', label: 'Minor', lvl: 'watch' };
+    return { s: 'S0', label: 'Quiet', lvl: 'ok' };
+  }
+  function swAdvice(sc, envKey) {
+    const deep = envKey === 'transit' || envKey === 'mars' || envKey === 'moon';
+    if (sc.lvl === 'ok') return 'No solar radiation storm. Normal operations; EVAs can proceed as planned.';
+    if (sc.lvl === 'watch') return deep ? 'Minor storm: keep EVAs short, carry a personal dosimeter and review the route to the storm shelter.' : 'Minor storm: little effect inside the station. Ground teams watch for escalation.';
+    return deep ? 'Solar particle event: postpone EVAs, move to the radiation storm shelter (water/polyethylene-shielded area), log dosimeter readings every hour and notify Earth.'
+                : 'Solar particle event: postpone EVAs and follow the station shelter plan in the most shielded module.';
+  }
+  async function loadSpaceWeather(force) {
+    let cached = null; try { cached = JSON.parse(localStorage.getItem(SW_KEY) || 'null'); } catch (e) {}
+    if (!force && cached && Date.now() - cached.fetched < 10 * 60 * 1000) return { ...cached, from: 'cache' };
+    try {
+      const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 8000);
+      const r = await fetch(SW_URL, { signal: ctl.signal }); clearTimeout(tm);
+      const rows = (await r.json()).filter(x => x.energy === '>=10 MeV' && x.flux != null);
+      const pts = rows.map(x => ({ t: Date.parse(x.time_tag), v: +x.flux }));
+      const data = { fetched: Date.now(), pts: pts.filter((p, i) => i % 3 === 0 || i === pts.length - 1) };
+      try { localStorage.setItem(SW_KEY, JSON.stringify(data)); } catch (e) {}
+      return { ...data, from: 'live' };
+    } catch (e) { return cached ? { ...cached, from: 'offline' } : null; }
+  }
+  function swChart(pts) {
+    const W = 600, H = 150, lo = -1, hi = 5; // log10 pfu axis 0.1 .. 1e5
+    const t0 = pts[0].t, t1 = pts[pts.length - 1].t || t0 + 1;
+    const X = t => ((t - t0) / Math.max(1, t1 - t0)) * W, Y = v => H - ((Math.log10(Math.max(v, 0.1)) - lo) / (hi - lo)) * H;
+    const line = pts.map((p, i) => `${i ? 'L' : 'M'}${X(p.t).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+    const thr = [10, 100, 1000].map((v, i) => `<line x1="0" x2="${W}" y1="${Y(v)}" y2="${Y(v)}" stroke="${['#f59e0b', '#ef6c00', '#dc2626'][i]}" stroke-dasharray="4 6" stroke-width="1.2"/><text x="${W - 4}" y="${Y(v) - 4}" text-anchor="end" font-size="11" fill="${['#b45309', '#c2410c', '#b91c1c'][i]}">S${i + 1}</text>`).join('');
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:150px;display:block">${thr}<path d="${line}" fill="none" stroke="#0b6bed" stroke-width="2.2"/></svg>`;
+  }
+  function osdrChart(a) {
+    const O = A.OSDR, tps = O.timepoints, W = 640, H = 260, pad = 34;
+    const vals = Object.values(a.series).flatMap(s => Object.values(s)).concat([a.lo, a.hi]).filter(v => v != null);
+    let mn = Math.min(...vals), mx = Math.max(...vals); const sp = (mx - mn) || 1; mn -= sp * 0.12; mx += sp * 0.12;
+    const X = i => pad + (i / (tps.length - 1)) * (W - pad * 2), Y = v => H - 26 - ((v - mn) / (mx - mn)) * (H - 46);
+    const cols = ['#0b6bed', '#0ea5e9', '#14b8a6', '#f59e0b'];
+    const band = a.lo != null && a.hi != null ? `<rect x="${pad}" width="${W - pad * 2}" y="${Y(a.hi)}" height="${Math.max(0, Y(a.lo) - Y(a.hi))}" fill="rgba(34,197,94,.10)"/>` : '';
+    const launchX = (X(2) + X(3)) / 2;
+    const lines = Object.entries(a.series).map(([c, s], k) => {
+      const p = tps.map((t, i) => s[t] != null ? [X(i), Y(s[t])] : null).filter(Boolean);
+      return `<path d="${p.map((q, i) => `${i ? 'L' : 'M'}${q[0].toFixed(1)},${q[1].toFixed(1)}`).join(' ')}" fill="none" stroke="${cols[k]}" stroke-width="2.4"/>` +
+        p.map(q => `<circle cx="${q[0]}" cy="${q[1]}" r="3.6" fill="#fff" stroke="${cols[k]}" stroke-width="2"/>`).join('');
+    }).join('');
+    const xl = tps.map((t, i) => `<text x="${X(i)}" y="${H - 6}" text-anchor="middle" font-size="11" fill="#5b6b82">${t}</text>`).join('');
+    return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${band}
+      <line x1="${launchX}" x2="${launchX}" y1="8" y2="${H - 24}" stroke="#94a3b8" stroke-dasharray="3 5"/><text x="${launchX}" y="16" text-anchor="middle" font-size="11" fill="#475569">3-day flight</text>
+      ${lines}${xl}</svg>
+      <div class="chips" style="margin-top:8px">${Object.keys(a.series).map((c, k) => `<span class="tag" style="background:${cols[k]}1a;color:${cols[k]}">● ${c}</span>`).join('')}<span class="tag" style="background:rgba(34,197,94,.12);color:#15803d">▇ lab reference range</span></div>`;
+  }
+  function osdrTable(name, a) {
+    // Apply BioOrbit's personal-baseline idea to the real data: pre-flight mean (L-92, L-44, L-3) vs R+1.
+    const rows = Object.entries(a.series).map(([c, s]) => {
+      const pre = ['L-92', 'L-44', 'L-3'].map(t => s[t]).filter(v => v != null);
+      const base = pre.reduce((x, y) => x + y, 0) / pre.length, r1 = s['R+1'];
+      const d = r1 != null ? (r1 - base) / base * 100 : null;
+      const inRange = r1 != null && (a.lo == null || r1 >= a.lo) && (a.hi == null || r1 <= a.hi);
+      const drift = d != null && Math.abs(d) >= 15;
+      return { c, base, r1, d, inRange, drift };
+    });
+    const hidden = rows.filter(r => r.drift && r.inRange).length, flagged = rows.filter(r => r.drift).length;
+    const dec = a.lo != null && a.lo < 10 ? 2 : 0;
+    const f = v => v == null ? '–' : (+v).toFixed(dec);
+    const html = `<table class="tbl" style="width:100%;min-width:600px;border-collapse:collapse;font-size:14px"><thead><tr style="text-align:left;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em"><th style="padding:8px 6px">Crew</th><th>Pre-flight baseline</th><th>R+1</th><th>Change</th><th>Earth range</th><th>Personal baseline</th></tr></thead><tbody>${rows.map(r => `<tr style="border-top:1px solid var(--line)"><td style="padding:9px 6px;font-weight:700">${r.c}</td><td>${f(r.base)}</td><td>${f(r.r1)}</td><td>${r.d == null ? '–' : (r.d > 0 ? '+' : '') + r.d.toFixed(0) + '%'}</td><td>${r.r1 == null ? '–' : r.inRange ? '<span class="tag" style="background:rgba(34,197,94,.12);color:#15803d">in range</span>' : '<span class="tag" style="background:rgba(239,68,68,.12);color:#b91c1c">out of range</span>'}</td><td>${r.d == null ? '–' : r.drift ? '<span class="tag" style="background:rgba(245,158,11,.15);color:#b45309">drift ≥15%</span>' : '<span class="tag">stable</span>'}</td></tr>`).join('')}</tbody></table>`;
+    const msg = flagged === 0 ? `No crew member changed by 15% or more from their own pre-flight baseline the day after landing.`
+      : `${flagged} of ${rows.length} crew members changed by ≥15% from their <b>own</b> pre-flight baseline the day after landing${hidden ? `, and <b>${hidden}</b> of them were still inside the Earth reference range, so a population-range check alone would have called them normal` : ''}. This is exactly the gap BioOrbit's personal-baseline engine is built to close.`;
+    return { html, msg };
+  }
+  function renderNasa() {
+    const el = $('#view-nasa'), O = A.OSDR, env = S.env();
+    const names = Object.keys(O.analytes);
+    el.innerHTML = `
+      <div class="page-head"><div><div class="eyebrow">Real data · NASA OSDR &amp; NOAA</div><h1>Real space data, not just simulations</h1>
+      <p>The crew in the rest of the app is simulated. This page uses <b>real data</b>: live solar-radiation measurements from NOAA's GOES satellite and blood tests from the four civilian astronauts of SpaceX <b>Inspiration4</b>, published by NASA's Open Science Data Repository.</p></div></div>
+      <div class="card"><div class="card-head"><h3>${chIco('alert')} Space weather now · solar radiation storms</h3><span class="sub" id="swSrc">loading…</span></div>
+        <div id="swBody"><div class="empty">Fetching GOES ≥10 MeV proton flux…</div></div></div>
+      <div class="card mt"><div class="card-head"><h3>${chIco('chart')} Inspiration4 crew blood tests</h3><span class="sub">OSD-569 · OSD-575 · C001–C004</span></div>
+        <div class="chips" id="osdrChips">${names.map(n => `<button class="chip ${nasa.analyte === n ? 'on' : ''}" data-a="${esc(n)}">${esc(n)}</button>`).join('')}</div>
+        <div id="osdrChart" class="mt" style="max-width:760px"></div>
+        <div class="insight" id="osdrMsg"></div>
+        <div id="osdrTable" class="mt" style="overflow-x:auto"></div>
+        <p class="small" style="color:var(--muted);margin-top:12px">Source: NASA OSDR <a href="https://osdr.nasa.gov/bio/repo/data/studies/OSD-569" target="_blank" rel="noopener">OSD-569</a> (complete blood count) and <a href="https://osdr.nasa.gov/bio/repo/data/studies/OSD-575" target="_blank" rel="noopener">OSD-575</a> (metabolic panel), SpaceX Inspiration4, 2021. L-n = days before launch, R+n = days after return. Educational use only, not a diagnosis.</p></div>`;
+    const drawA = () => {
+      const a = O.analytes[nasa.analyte];
+      $('#osdrChart').innerHTML = `<div class="small" style="color:var(--muted);margin-bottom:6px">${esc(nasa.analyte)} · ${esc(a.unit)} · ${a.src}</div>` + osdrChart(a);
+      const t = osdrTable(nasa.analyte, a); $('#osdrTable').innerHTML = t.html; $('#osdrMsg').innerHTML = t.msg;
+    };
+    $$('#osdrChips .chip').forEach(c => c.addEventListener('click', () => { nasa.analyte = c.dataset.a; $$('#osdrChips .chip').forEach(x => x.classList.toggle('on', x === c)); drawA(); }));
+    drawA();
+    loadSpaceWeather(false).then(sw => {
+      if (current !== 'nasa') return;
+      if (!sw || !sw.pts || !sw.pts.length) { $('#swSrc').textContent = 'offline'; $('#swBody').innerHTML = '<div class="empty">No connection and no cached reading yet. BioOrbit keeps working offline; the radiation card uses the onboard dose model until a link is available.</div>'; return; }
+      const last = sw.pts[sw.pts.length - 1], sc = sScale(last.v);
+      const ago = Math.round((Date.now() - last.t) / 60000);
+      $('#swSrc').textContent = sw.from === 'live' ? 'live · NOAA SWPC' : sw.from === 'cache' ? 'cached · NOAA SWPC' : 'offline · last known';
+      const color = { ok: '#15803d', watch: '#b45309', alert: '#c2410c', critical: '#b91c1c' }[sc.lvl];
+      $('#swBody').innerHTML = `<div class="grid g-2" style="align-items:center">
+        <div><div style="font-size:44px;font-weight:800;color:${color};letter-spacing:-.02em">${sc.s} · ${sc.label}</div>
+          <div style="color:var(--text2);margin-top:4px">≥10 MeV protons: <b>${last.v < 1 ? last.v.toFixed(2) : last.v.toFixed(1)} pfu</b> · ${ago <= 1 ? 'just now' : ago + ' min ago'} · GOES-${'primary'}</div>
+          <div class="insight" style="margin-top:12px"><b>${esc(env.name)}:</b> ${swAdvice(sc, S.state.envKey)}</div></div>
+        <div>${swChart(sw.pts)}<div class="small" style="color:var(--muted);text-align:right">last 24 h · log scale · NOAA storm thresholds S1–S3</div></div></div>`;
+    });
   }
 
   /* =========================== PULSE =========================== */

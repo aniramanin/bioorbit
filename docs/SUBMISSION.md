@@ -69,10 +69,13 @@ Yes. The concept, the scientific direction and the features were defined by our 
 - **NASA Human Research Program, Risks of Human Spaceflight** (https://www.nasa.gov/hrp/risks/): used to choose the monitored risks and body systems: cardiovascular, bone and muscle loss, behavioural health and sleep, inadequate nutrition, SANS (vision), immune changes.
 - **NASA Human Research Program, Ongoing HRP Research in Space** (https://www.nasa.gov/hrp/ongoing-hrp-research/): context for in-flight measurements and countermeasures.
 - **NASA-STD-3001, Space Flight Human-System Standard:** 600 mSv career radiation limit used in the dose tracker.
+- **NASA OSDR OSD-569, SpaceX Inspiration4 Complete Blood Count** (https://osdr.nasa.gov/bio/repo/data/studies/OSD-569): real crew data shown on the NASA data page; BioOrbit's personal-baseline rule is applied to it.
+- **NASA OSDR OSD-575, SpaceX Inspiration4 Comprehensive Metabolic Panel** (https://osdr.nasa.gov/bio/repo/data/studies/OSD-575): real crew data on the NASA data page.
 
 ## Space Agency Partner Data and Other References
 - **CSA (Canadian Space Agency), Monitoring Radiation for Astronaut Health (2026):** inspired the cumulative radiation-dose tracking per environment.
 - **CSA, Why Do We Conduct Science Experiments in Space?**
+- **NOAA SWPC, GOES integral proton flux** (https://services.swpc.noaa.gov/json/goes/primary/integral-protons-1-day.json): live solar radiation storm status (NOAA S-scale) with EVA and shelter advice.
 - Basner M, Mollicone D, Dinges DF. Validity and sensitivity of a brief psychomotor vigilance test (PVT-B). *Acta Astronautica*, 2011.
 - Zeitlin C et al. Measurements of energetic particle radiation in transit to Mars on the Mars Science Laboratory. *Science*, 2013.
 - Hassler DM et al. Mars' surface radiation environment measured with the MSL Curiosity rover. *Science*, 2014.
