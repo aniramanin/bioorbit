@@ -49,43 +49,46 @@ def add_bell(t0, note, vol, dec=1.2, pan=0.0):
         L[i] += s * (1 - pan); R[i] += s * (1 + pan)
 
 # --- harmony (MIDI notes) ---
-add_pad(0.0, 5.3, [38, 45, 50, 53, 57], 0.030)            # Dm add9-ish, dark
-add_pad(5.4, 15.4, [41, 48, 52, 57, 60, 64], 0.026)       # Fmaj7 / bright
-add_pad(15.5, 22.0, [45, 52, 57, 60, 64], 0.026)          # Am
-add_pad(22.1, 25.4, [41, 48, 53, 57, 62, 65], 0.026)      # F add9 lift
-add_pad(25.5, 28.4, [36, 43, 48, 52, 55, 59, 62], 0.026, rel=1.6)  # Cmaj9 resolve
+add_pad(0.0, 4.6, [38, 45, 50, 53, 57], 0.030)
+add_pad(4.7, 10.5, [41, 48, 52, 57, 60, 64], 0.026)
+add_pad(10.6, 16.3, [45, 52, 57, 60, 64], 0.026)
+add_pad(16.4, 23.3, [43, 50, 55, 59, 62], 0.026)
+add_pad(23.4, 25.9, [41, 48, 53, 57, 62, 65], 0.026)
+add_pad(26.0, 28.4, [36, 43, 48, 52, 55, 59, 62], 0.026, rel=1.6)
 
 # --- riser into the reveal + impacts at the big cuts ---
-add_noise(3.9, 5.4, 0.55, lambda p: p ** 2.2, 0.01, 0.35)
-for t in (5.4, 25.5):
+add_noise(3.4, 4.7, 0.55, lambda p: p ** 2.2, 0.01, 0.35)
+for t in (4.7, 26.0):
     add_kick(t, 0.9, 140, 34, 0.55); add_noise(t, t + 1.4, 0.35, lambda p: (1 - p) ** 3, 0.5, 0.05)
-for t in (2.8, 8.2, 12.1, 15.5, 18.9, 22.1):          # soft whoosh on scene changes
+for t in (2.5, 7.0, 10.6, 13.6, 16.4, 19.4, 23.4):          # soft whoosh on scene changes
     add_noise(t - 0.35, t + 0.25, 0.22, lambda p: math.sin(math.pi * p) ** 2, 0.02, 0.25)
 
 # --- groove: soft pulse at 120 bpm (off during the heartbeat scene) ---
-t = 5.4
-while t < 25.4:
-    if not (15.5 <= t < 18.9): add_kick(t, 0.32 if int(round((t - 5.4) / 0.5)) % 2 == 0 else 0.18)
+t = 4.7
+while t < 25.9:
+    if not (10.6 <= t < 13.6): add_kick(t, 0.32 if int(round((t - 4.7) / 0.5)) % 2 == 0 else 0.18)
     t += 0.5
 # hi shimmer ticks on the off-beats in bright sections
-t = 8.45
-while t < 15.3:
+t = 7.25
+while t < 10.4:
     add_noise(t, t + 0.05, 0.10, lambda p: (1 - p) ** 4, 0.9, 0.9, pan=0.3); t += 0.5
 
 # --- heartbeat (72 bpm, synced to the visual beat peaks) ---
-n = math.ceil(15.6 * 1.2)
-while (n + 0.18) / 1.2 < 18.85:
+n = math.ceil(10.7 * 1.2)
+while (n + 0.18) / 1.2 < 13.55:
     tb = (n + 0.18) / 1.2
     add_kick(tb - 0.02, 0.55, 80, 38, 0.12); add_kick(tb + 0.20, 0.32, 75, 36, 0.10); n += 1
 
 # --- tap + result in the reaction test ---
-add_bell(19.95, 84, 0.10, 0.25)
-add_kick(20.2, 0.4, 300, 120, 0.05); add_bell(20.2, 88, 0.14, 0.6)
+add_bell(14.6, 84, 0.10, 0.25)
+add_kick(14.85, 0.4, 300, 120, 0.05); add_bell(14.85, 88, 0.14, 0.6)
+add_bell(17.5, 81, 0.08, 0.4); add_bell(18.1, 84, 0.08, 0.4)
+add_bell(20.7, 76, 0.07, 0.8); add_bell(21.6, 79, 0.07, 0.8)
 
 # --- sparkles: logo reveal & each planet & end card ---
-for i, nt in enumerate([72, 76, 79, 84]): add_bell(5.55 + i * 0.12, nt, 0.06, 1.1, pan=(i - 1.5) * 0.25)
-for t, nt in ((22.2, 76), (23.05, 79), (24.1, 83)): add_bell(t, nt, 0.08, 0.9)
-for i, nt in enumerate([72, 79, 84, 88]): add_bell(25.6 + i * 0.14, nt, 0.06, 1.6, pan=(i - 1.5) * 0.25)
+for i, nt in enumerate([72, 76, 79, 84]): add_bell(4.85 + i * 0.12, nt, 0.06, 1.1, pan=(i - 1.5) * 0.25)
+for t, nt in ((23.5, 76), (24.15, 79), (25.0, 83)): add_bell(t, nt, 0.08, 0.9)
+for i, nt in enumerate([72, 79, 84, 88]): add_bell(26.1 + i * 0.14, nt, 0.06, 1.6, pan=(i - 1.5) * 0.25)
 
 # --- master: fade, soft-clip, normalize ---
 peak = 1e-9
