@@ -84,6 +84,7 @@ window.AURORA = window.AURORA || {};
     const start = today - (days - 1) * DAY;
     const crew = CREW_TEMPLATE.map((c, ci) => {
       const r = mulberry32(1000 + ci * 77);
+      const rc = mulberry32(5000 + ci * 13);
       const records = [];
       for (let d = 0; d < days; d++) {
         const p = d / (days - 1);
@@ -98,6 +99,7 @@ window.AURORA = window.AURORA || {};
         // morning
         const morning = { t: base + 7 * 3600e3 + r() * 1800e3, v: {}, sym: v.sym, src: 'manual' };
         ['hr', 'sys', 'dia', 'spo2', 'temp', 'rr', 'sleep'].forEach(k => morning.v[k] = fmt(k));
+        morning.v.co2 = round(2.2 + rc() * 0.7 + (last && ci === 0 ? 1.1 : 0), 1); // cabin ppCO2, mmHg
         if (d % 2 === 0 || isToday) morning.v.glucose = fmt('glucose');
         if (d % 7 === 0) morning.v.weight = fmt('weight');
         records.push(morning);

@@ -95,7 +95,7 @@ window.AURORA = window.AURORA || {};
   };
 
   const STATUS_SCORE = { ok: 100, watch: 72, alert: 40, critical: 8 };
-  const WEIGHTS = { hr: 1, sys: 1, dia: .5, spo2: 1.2, temp: 1, rr: .6, glucose: .8, sleep: 1, mood: 1, stress: .7, pvt: 1, exercise: .7, water: .5, weight: .4 };
+  const WEIGHTS = { hr: 1, sys: 1, dia: .5, spo2: 1.2, temp: 1, rr: .6, glucose: .8, sleep: 1, mood: 1, stress: .7, pvt: 1, exercise: .7, water: .5, weight: .4, co2: .6 };
   const STALE = { weight: 10 * DAY, default: 3 * DAY };
 
   E.assess = function (state, crew) {
@@ -219,6 +219,15 @@ window.AURORA = window.AURORA || {};
         title: 'Possible infection: fever + elevated heart rate / symptoms',
         detail: 'Spaceflight weakens the immune system and latent viruses can reactivate. Early isolation protects the rest of the crew.',
         actions: ['Use a mask and sanitise shared surfaces.', 'Re-measure temperature every 4 h; hydrate.', 'Check medical kit for antipyretics per protocol.'],
+        escalate: E.escalation(env, 'alert')
+      });
+    }
+    if (rank(st('co2')) >= 1 && sym.includes('headache')) {
+      out.push({
+        sev: rank(st('co2')) >= 2 ? 'alert' : 'watch', kind: 'pattern', key: 'co2',
+        title: 'Headache with high cabin CO₂',
+        detail: `Cabin CO₂ is ${ind.co2.v} mmHg and you reported a headache. On the ISS, headache odds roughly doubled for every 1 mmHg of CO₂ (Law et al., 2014).`,
+        actions: ['Move to a better-ventilated module and increase airflow.', 'Hydrate and re-check the headache in 1 hour.', 'Report the CO₂ level to the ground for life-support review.'],
         escalate: E.escalation(env, 'alert')
       });
     }

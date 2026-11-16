@@ -467,7 +467,7 @@
         <div class="section-title"><h3>Vital signs</h3><span class="line"></span></div>
         <div class="form-grid">${['hr', 'sys', 'dia', 'spo2', 'temp', 'rr', 'glucose'].map(fieldHTML).join('')}</div>
         <div class="section-title"><h3>Body & countermeasures</h3><span class="line"></span></div>
-        <div class="form-grid">${['exercise', 'water', 'weight'].map(fieldHTML).join('')}</div>
+        <div class="form-grid">${['exercise', 'water', 'weight', 'co2'].map(fieldHTML).join('')}</div>
         <div class="section-title"><h3>Sleep & mind</h3><span class="line"></span></div>
         <div class="form-grid">
           ${fieldHTML('sleep')}

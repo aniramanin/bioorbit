@@ -83,6 +83,20 @@ window.AURORA = window.AURORA || {};
       },
       hazards: ['environment']
     },
+    co2: {
+      name: 'Cabin CO₂ (partial pressure)', short: 'Cabin CO₂', unit: 'mmHg', icon: 'CO₂',
+      group: 'habitat', min: 0, max: 20, step: 0.1, dec: 1, better: 'low', drift: 0.8,
+      chartMin: 0, chartMax: 7, normal: [0, 3],
+      ranges: [[-INF, 3, 'ok'], [3, 4, 'watch'], [4, 5.3, 'alert'], [5.3, INF, 'critical']],
+      why: 'CO₂ builds up in closed cabins and pools around the face in microgravity. On the ISS, the odds of a crew member reporting a headache roughly doubled for each 1 mmHg rise in CO₂ (Law et al., 2014). NASA-STD-3001 sets an average limit of 3 mmHg.',
+      how: ['Read the ppCO₂ value on the habitat (ECLSS) display or a portable CO₂ monitor.', 'Log the reading of the module where you spend most of the day.'],
+      actions: {
+        watch: ['Improve airflow at your work and sleep station (fans on, nothing blocking vents).', 'Note any headache or trouble concentrating.'],
+        alert: ['Move to a better-ventilated module and ask a crewmate to check their symptoms too.', 'Report to the ground: CO₂ removal (CDRA/scrubber) may need attention.'],
+        critical: ['Treat as an atmosphere emergency: follow the ECLSS checklist.', 'Alert the whole crew and the flight surgeon immediately.']
+      },
+      hazards: ['environment']
+    },
     temp: {
       name: 'Body temperature', short: 'Temperature', unit: '°C', icon: '°C',
       group: 'vitals', min: 33, max: 43, step: 0.1, dec: 1, better: 'mid', drift: 0.6,
@@ -291,7 +305,7 @@ window.AURORA = window.AURORA || {};
       space: 'Fluid shift, heart deconditioning and radiation exposure increase cardiovascular risk and orthostatic intolerance.'
     },
     lungs: {
-      name: 'Lungs & Breathing', indicators: ['spo2', 'rr'],
+      name: 'Lungs & Breathing', indicators: ['spo2', 'rr', 'co2'],
       func: 'Gas exchange: brings in oxygen and removes CO₂.',
       space: 'Closed cabin atmosphere, CO₂ build-up and lunar/Martian dust can irritate airways.'
     },
