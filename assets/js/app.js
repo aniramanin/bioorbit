@@ -179,7 +179,7 @@
   $('#settingsBtn').addEventListener('click', () => openSettings());
 
   /* =========================== ROUTING =========================== */
-  const VIEWS = { bridge: renderBridge, log: renderLog, trends: renderTrends, pulse: renderPulse, reaction: renderReaction, crew: renderCrew, downlink: renderDownlink, library: renderLibrary, nasa: renderNasa, achievements: renderAchievements };
+  const VIEWS = { bridge: renderBridge, log: renderLog, trends: renderTrends, pulse: renderPulse, reaction: renderReaction, vision: renderVision, crew: renderCrew, downlink: renderDownlink, library: renderLibrary, nasa: renderNasa, achievements: renderAchievements };
   function route() {
     let v = (location.hash || '#bridge').slice(1).split('?')[0];
     if (!VIEWS[v]) v = 'bridge';
@@ -739,6 +739,57 @@
           <div class="insight" style="margin-top:12px"><b>${esc(env.name)}:</b> ${swAdvice(sc, S.state.envKey)}</div></div>
         <div>${swChart(sw.pts)}<div class="small" style="color:var(--muted);text-align:right">last 24 h · log scale · NOAA storm thresholds S1–S3</div></div></div>`;
     });
+  }
+
+  /* =========================== VISION CHECK (Amsler grid, SANS screening) =========================== */
+  const amsler = { eye: 'L', marks: { L: new Set(), R: new Set() }, done: { L: null, R: null } };
+  function renderVision() {
+    const el = $('#view-vision');
+    const N = 20;
+    el.innerHTML = `
+      <div class="page-head"><div><div class="eyebrow">Vision check · SANS screening</div><h1>Amsler grid self-check</h1>
+      <p>Spaceflight Associated Neuro-ocular Syndrome (SANS) can change vision on long missions. This 1-minute self-check uses the Amsler grid: cover one eye, look only at the centre dot from about 35 cm, and tap any square where the lines look <b>wavy, blurred, dark or missing</b>. It is a screening aid, not an eye exam.</p></div>
+      <div class="seg" id="eyeSeg"><button data-e="L" class="${amsler.eye === 'L' ? 'on' : ''}">Left eye</button><button data-e="R" class="${amsler.eye === 'R' ? 'on' : ''}">Right eye</button></div></div>
+      <div class="grid g-2">
+        <div class="card" style="display:flex;justify-content:center"><div id="amsler" style="position:relative;width:min(100%,440px);aspect-ratio:1;background:#fff;border:2px solid #0b1f3a;display:grid;grid-template-columns:repeat(${N},1fr);touch-action:manipulation"></div></div>
+        <div class="card"><div class="card-head"><h3>${chIco('info')} How to do it</h3></div>
+          <ol style="margin:0 0 14px;padding-left:18px;color:var(--text2);line-height:1.7"><li>Wear your usual glasses or lenses.</li><li>Cover the <b id="otherEye">${amsler.eye === 'L' ? 'right' : 'left'}</b> eye.</li><li>Stare at the centre dot. Do not move your eye.</li><li>Tap squares that look distorted. Tap again to clear.</li></ol>
+          <div class="row" style="gap:10px;flex-wrap:wrap"><button class="btn" id="amsOk">All lines look straight</button><button class="btn sec" id="amsSave">Save marked areas</button></div>
+          <div class="insight" id="amsResult" style="margin-top:16px"></div></div>
+      </div>`;
+    const g = $('#amsler');
+    const status = e => amsler.done[e] == null ? 'not checked yet' : amsler.done[e] === 0 ? 'lines straight ✓' : `${amsler.done[e]} distorted square(s) marked`;
+    const draw = () => {
+      const marks = amsler.marks[amsler.eye];
+      g.innerHTML = Array.from({ length: N * N }, (_, i) => `<div data-i="${i}" style="border-right:1px solid #0b1f3a;border-bottom:1px solid #0b1f3a;cursor:pointer;background:${marks.has(i) ? 'rgba(239,68,68,.45)' : 'transparent'}"></div>`).join('') +
+        `<span style="position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#0b1f3a;pointer-events:none"></span>`;
+      $$('[data-i]', g).forEach(c => c.addEventListener('click', () => { const i = +c.dataset.i; if (marks.has(i)) marks.delete(i); else marks.add(i); c.style.background = marks.has(i) ? 'rgba(239,68,68,.45)' : 'transparent'; }));
+      let html = `<b>Left eye:</b> ${status('L')}<br><b>Right eye:</b> ${status('R')}`;
+      if (amsler.done.L != null && amsler.done.R != null) {
+        html += (amsler.done.L + amsler.done.R)
+          ? `<p style="margin-top:10px"><b>Next steps:</b> repeat the check tomorrow at the same time, log headache or blurred vision, and report to the flight surgeon at the next contact window for an onboard fundoscopy/OCT exam. New or growing distortion is a SANS warning sign.</p>`
+          : `<p style="margin-top:10px">Both eyes normal today. Repeat weekly on long missions, or any day you notice a change.</p>`;
+      }
+      $('#amsResult').innerHTML = html;
+    };
+    const setEye = e => { amsler.eye = e; $$('#eyeSeg button').forEach(x => x.classList.toggle('on', x.dataset.e === e)); $('#otherEye').textContent = e === 'L' ? 'right' : 'left'; draw(); };
+    $$('#eyeSeg button').forEach(b => b.addEventListener('click', () => setEye(b.dataset.e)));
+    const save = n => {
+      const eye = amsler.eye, name = eye === 'L' ? 'left' : 'right';
+      amsler.done[eye] = n;
+      if (n > 0) {
+        withGame(() => S.addRecord({ v: {}, sym: ['vision'], note: `Amsler grid: ${n} distorted square(s) in the ${name} eye.`, src: 'amsler' }));
+        toast(`⚠ Distortion recorded in the <b>${name} eye</b>. BioOrbit flags it for SANS follow-up.`);
+      } else {
+        withGame(() => S.addRecord({ v: {}, sym: [], note: `Amsler grid: ${name} eye normal.`, src: 'amsler' }));
+        toast(`✓ ${name[0].toUpperCase() + name.slice(1)} eye: lines straight.`);
+      }
+      renderTop();
+      if (amsler.done[eye === 'L' ? 'R' : 'L'] == null) setEye(eye === 'L' ? 'R' : 'L'); else draw();
+    };
+    $('#amsOk').addEventListener('click', () => { amsler.marks[amsler.eye].clear(); save(0); });
+    $('#amsSave').addEventListener('click', () => { const n = amsler.marks[amsler.eye].size; if (!n) { toast('Tap the squares that look distorted first, or choose “All lines look straight”.'); return; } save(n); });
+    draw();
   }
 
   /* =========================== PULSE =========================== */

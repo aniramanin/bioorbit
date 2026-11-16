@@ -628,3 +628,7 @@ svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-widt
   .card { box-shadow: none; }
   .report { max-height: none; background: #fff; }
 }
+
+/* sidebar: never squeeze cards when the menu grows */
+.sidebar > * { flex-shrink: 0; }
+.nav a { padding: 9px 14px; }
